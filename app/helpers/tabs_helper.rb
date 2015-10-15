@@ -1,9 +1,8 @@
 # encoding: utf-8
 module TabsHelper
-
   # Short-hand to render shared tab_set partial for a given set of links.
   def draw_tab_set(links)
-    render(partial: "/shared/tab_set", locals: {links: links})
+    render(partial: "/shared/tab_set", locals: { links: links })
   end
 
   # Draw the cutesy eye icons in the upper right side of screen.  It does it
@@ -36,34 +35,34 @@ module TabsHelper
       # Create link to change interest state.
       def interest_link(label, object, state) # :nodoc:
         link_with_query(label,
-          controller: :interest,
-          action: :set_interest,
-          id: object.id,
-          type: object.class.name,
-          state: state
-        )
+                        controller: :interest,
+                        action: :set_interest,
+                        id: object.id,
+                        type: object.class.name,
+                        state: state
+                       )
       end
 
       # Create large icon image.
       def interest_icon_big(type, alt) # :nodoc:
         image_tag("#{type}2.png",
-          alt: alt,
-          width: "50px",
-          height: "50px",
-          class: "interest_big",
-          title: alt
-        )
+                  alt: alt,
+                  width: "50px",
+                  height: "50px",
+                  class: "interest_big",
+                  title: alt
+                 )
       end
 
       # Create small icon image.
       def interest_icon_small(type, alt) # :nodoc:
         image_tag("#{type}3.png",
-          alt: alt,
-          width: "23px",
-          height: "23px",
-          class: "interest_small",
-          title: alt
-        )
+                  alt: alt,
+                  width: "23px",
+                  height: "23px",
+                  class: "interest_small",
+                  title: alt
+                 )
       end
 
       def interest_tab(img1, img2, img3)

@@ -95,7 +95,7 @@ GEM
       railties (>= 3.1)
     json (1.8.3)
     kgio (2.10.0)
-    libv8 (3.16.14.11)
+    libv8 (3.16.14.13)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
     mime-types (2.6.2)
@@ -227,6 +227,3 @@ DEPENDENCIES
   therubyracer
   uglifier
   unicorn
-
-BUNDLED WITH
-   1.10.6
