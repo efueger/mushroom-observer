@@ -601,7 +601,7 @@ class AbstractModel < ActiveRecord::Base
     !respond_to?("user") || (user && (self.user == user))
   end
 
-  def with_id(str)
+  def string_with_id(str)
     id_str = id || "?"
     str + " (#{id_str})"
   end
