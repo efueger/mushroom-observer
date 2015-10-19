@@ -273,7 +273,7 @@ class Observation < AbstractModel
 
   # Name in plain text with id to make it unique, never nil.
   def unique_text_name
-    name.real_search_name + " (#{id || '?'})"
+    string_with_id(name.real_search_name)
   end
 
   # Textile-marked-up name, never nil.
@@ -283,7 +283,7 @@ class Observation < AbstractModel
 
   # Textile-marked-up name with id to make it unique, never nil.
   def unique_format_name
-    name.observation_name + " (#{id || '?'})"
+    string_with_id(name.observation_name)
   rescue
     ""
   end
