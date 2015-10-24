@@ -997,7 +997,7 @@
   app_banner: Mushroom<br/>Observer
 
   # This goes in a box at the top of the page.
-  app_banner_box: 1. The old MO Listserver email list is defunct. If you want to be on a general email list, please join the <a href="http://groups.google.com/forum/#!forum/mo-general">MO General Forum</a>. <br/>2. Names and Observations now have links to MycoBank.<br/>3. Enjoy our new user interface!<br>See <a href="/observer/news">Release Notes</a> for details. Of course, <a href="/observer/ask_webmaster_question">send us a note</a> if you see anything wrong.
+  app_banner_box: New preference available - If you want to see the preferred name of the observer more prominently on the Show Observation page, go to <a href="/account/prefs">your preferences</a> and select "View Observer Identification of Observations".<br/>Of course, <a href="/observer/ask_webmaster_question">send us a note</a> if you see anything wrong.
 
   # These are the controls/links in the left-hand panel.
   app_intro: Introduction
