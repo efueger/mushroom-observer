@@ -1708,10 +1708,12 @@
   show_name_on_mycobank: on MycoBank
 
   # observer/_show_namings
+  show_namings_date_proposed: Date Proposed
   show_namings_proposed_name: "[:NAMING]"
   show_namings_proposed_names: "[:NAMINGS]"
   show_namings_no_names_yet: No names have been proposed yet.
   show_namings_propose_new_name: Propose Another Name
+  show_namings_more: More
   show_namings_eye_help: Observer's choice
   show_namings_eyes_help: Current consensus
   show_namings_community_favorite: This is the community favorite.
