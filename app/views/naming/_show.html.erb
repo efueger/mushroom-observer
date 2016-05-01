@@ -2,6 +2,7 @@
   logged_in = !@user.nil? && @user.verified
   consensus = observation.consensus_naming
   any_names = observation.namings && observation.namings.count > 0
+  votes = observation.user_votes_by_naming(@user)
 %>
 
 <!--TABLE OF NAMES FOR WIDE SCREEN-->
@@ -11,16 +12,25 @@
 
     <div class="row table-namings">
       <div class="col-sm-6">
-        <%= content_tag(:h4,
-	    any_names ? :show_namings_proposed_names.t : :show_namings_no_names_yet.t) %>
+	<% if any_names %>
+          <%= content_tag(:h4, :show_namings_proposed_names.t) %>
+	<% else %>
+	  <%= content_tag(:h4, :show_namings_no_names_yet.t) %>
+	<% end %>
       </div>
-      <div class="col-sm-2 push-down"><%= :show_namings_date_proposed.t %></div>
+      <div class="col-sm-2 push-down">
+	<%= :show_namings_date_proposed.t %>
+      </div>
       <div class="col-sm-2 push-down"><%= :show_namings_user.t %></div>
-      <div class="col-sm-2"><%= link_with_query(:show_namings_more.t, {
-	       controller: :naming,
-	       action: :create,
-	       id: observation.id},
-	       class: "btn pull-right push-down") %>
+      <div class="col-sm-2 push-down">
+	Id
+	<% unless details %>
+	  <%= link_with_query(:show_namings_more.t, {
+	      controller: :naming,
+	      action: :create,
+	      id: observation.id},
+	      class: "btn pull-right") %>
+	<% end %>
       </div>
     </div>
     <div class="list-group">
@@ -28,7 +38,33 @@
         <% Textile.register_name(naming.name) %>
         <div class="list-group-item">
           <div class="row">
-            <div class="col-sm-6">
+            <% if details && logged_in %>
+              <div class="col-sm-2">
+                <% vote = votes[naming.id]
+                   menu = Vote.confidence_menu
+                   if can_have_no_opinion(naming, vote)
+                     menu = [Vote.no_opinion] + menu
+                   end %>
+                <%= select(:vote, :value, menu, {},
+                           { index: naming.id,
+                             data: { role: "change_vote", id: naming.id } }
+                    ) %>
+                <%= submit_tag(:show_namings_cast.l,
+                               class: "btn") if !can_do_ajax? %>
+              <% if details && check_permission(naming) %>
+                [<%= link_with_query(:EDIT.t,
+                     { controller: :naming, action: :edit,
+                     id: naming })
+                 %>&nbsp;|&nbsp;<%= link_with_query(:DESTROY.t,
+                     { controller: :naming, action: :destroy,
+                     id: naming.id },
+                     data: {confirm: :are_you_sure.l }) %>]
+	      <% end %>
+	      </div>
+              <div class="col-sm-4">
+            <% else %>
+              <div class="col-sm-6">
+            <% end %>
               <%= link_with_query(naming.format_name.t,
                   controller: :name, action: :show_name,
                   id: naming.name) %>
@@ -40,11 +76,13 @@
               <strong><%= user_link(naming.user, naming.user.login) %></strong>
     	    </div>
             <div class="col-sm-2">
-    	      <% if observation.is_owners_favorite?(naming) %>
-                <b><%= :show_observation_owner_id.t +
-    		       (naming == consensus ? ", " : "") %></b>
-	      <% end %>
-              <b><%= :show_observation_site_id.t if naming == consensus %></b>
+	      <b>
+    		<% if observation.is_owners_favorite?(naming) %>
+                  <%= :OBSERVER.t +
+    		      (naming == consensus ? ", " : "") %>
+		<% end %>
+                <%= :SITE.t if naming == consensus %>
+              </b>
     	    </div>
           </div>
 	</div>
@@ -62,10 +100,10 @@
 
     <div class="row visible-xs">
       <div class="col-xs-12">
-        <%= content_tag(:h4, any_names ? :show_namings_proposed_names.t : :show_namings_no_names_yet.t) %>
         <% if any_names %>
+          <%= content_tag(:h4, :show_namings_proposed_names.t) %>
           <div class="list-group">
-            <% observation.namings.sort_by(&:created_at).reverse.each do |naming| %>
+            <% observation.namings.each do |naming| %>
               <% Textile.register_name(naming.name) %>
               <div class="list-group-item">
                 <div class="row">
@@ -93,6 +131,8 @@
               </div>
             <% end # each_name %>
           </div>
+	<% else # any_names %>
+          <%= content_tag(:h4, :show_namings_no_names_yet.t) %>
         <% end # any_names %>
       </div>
     </div>

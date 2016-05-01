@@ -132,7 +132,7 @@ class Observation < AbstractModel
 
   # DO NOT use :dependent => :destroy -- this causes it to recalc the
   # consensus several times and send bogus emails!!
-  has_many :namings
+  has_many :namings, -> { order "created_at DESC" }
 
   has_and_belongs_to_many :images
   has_and_belongs_to_many :projects
@@ -407,6 +407,16 @@ class Observation < AbstractModel
   # Convert cached Vote score to percentage.
   def vote_percent
     Vote.percent(vote_cache)
+  end
+
+  def user_votes_by_naming(user)
+    result = {}
+    namings.each do |naming|
+      vote = naming.votes.find { |x| x.user_id == user.id }
+      vote ||= Vote.new(value: 0)
+      result[naming.id] = vote
+    end
+    result
   end
 
   # Change User's Vote for this naming.  Automatically recalculates the

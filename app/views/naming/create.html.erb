@@ -15,14 +15,18 @@
   <div class="row">
     <div class="col-xs-12 col-sm-8 pull-left-sm">
       <div class="push-down">
-        <%= render(partial: "observer/show_observation",
-                   locals: { observation: @observation }) %>
+	<p>
+          <%= render(partial: "observer/show_observation",
+              locals: { observation: @observation }) %>
+	</p>
       </div>
 
       <%= render(partial: "naming/show",
 	  locals: { observation: @observation, details: true }) %>
 
-      <%= submit_tag(:CREATE.l, class: "btn center-block", style: "margin-top:2em") %>
+      <%= submit_tag(:CREATE.l,
+	  class: "btn center-block",
+	  style: "margin-top:2em") %>
 
       <div class="push-down">
         <%= render(partial: "form", locals: { action: :create,

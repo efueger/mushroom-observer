@@ -439,6 +439,8 @@
   reviewer: reviewer
   REVIEWERS: Reviewers
   reviewers: reviewers
+  SITE: Site
+  site: site
   SIZE: Size
   size: size
   STATUS: Status
