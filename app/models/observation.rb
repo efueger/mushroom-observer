@@ -894,6 +894,14 @@ class Observation < AbstractModel
     img
   end
 
+  def has_backup_data?
+    thumb_image_id != nil ||
+      species_lists.count > 0 ||
+      specimens.count > 0 ||
+      specimen ||
+      notes.length >= 100
+  end
+
   ##############################################################################
   #
   #  :section: Projects

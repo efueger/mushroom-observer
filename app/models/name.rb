@@ -467,6 +467,10 @@ class Name < AbstractModel
     !unknown?
   end
 
+  def imageless?
+    text_name == "Imageless"
+  end
+
   def display_name
     str = self[:display_name]
     if User.current &&
@@ -940,6 +944,10 @@ class Name < AbstractModel
   # Does this Name have notes (presumably discussing taxonomy).
   def has_notes?
     notes && notes.match(/\S/)
+  end
+
+  def text_before_rank
+    text_name.split(" " + rank.to_s.downcase).first
   end
 
   ##############################################################################

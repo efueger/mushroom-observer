@@ -83,11 +83,12 @@ class CapybarLurkerTest < IntegrationTestCase
   def test_show_observation
     # Use detailed_unknown since it has everything.
     lurker = users(:katrina)
-    obs = observations(:detailed_unknown)
+    obs = observations(:detailed_unknown_obs)
     owner = obs.user
     name = obs.name
 
     # First login
+    reset_session!
     visit(root_path)
     first(:link, "Login").click
     assert_equal("#{:app_title.l }: Please login", page.title, "Wrong page")
