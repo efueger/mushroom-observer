@@ -42,7 +42,9 @@ class VoteController < ApplicationController
         flashed = true
       end
     end
-    redirect_with_query(controller: :observer, action: :show_observation, id: observation.id)
+    redirect_with_query(controller: :naming,
+                        action: :create,
+                        id: observation.id)
   end
 
   # Refresh vote cache for all observations in the database.
