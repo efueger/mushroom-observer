@@ -410,6 +410,7 @@ class Observation < AbstractModel
   end
 
   def user_votes_by_naming(user)
+    return {} if not user
     result = {}
     namings.each do |naming|
       vote = naming.votes.find { |x| x.user_id == user.id }
