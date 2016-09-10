@@ -90,6 +90,24 @@
     </div>
     <!--/TABLE OF NAMES FOR WIDE SCREEN-->
 
+    <!--HELP TEXT AND EYES FOR WIDE SCREEN-->
+    <% if details %>
+      <div class="row" style="margin: 0; padding-top: 0; padding-bottom: 0">
+        <div class="col-xs-12">
+          <div class="pull-right-sm push-down-sm">
+            <%= submit_tag(:show_namings_update_votes.l,
+                           data: {role: "save_votes"},
+                           class: "btn") if logged_in && any_names %>
+          </div>
+          <p class="help-block max-width-text">
+            <% if !logged_in %>
+                <%= :show_namings_please_login.t %>
+            <% end %>
+          </p>
+        </div>
+      </div>
+    <% end %>
+    <!--/HELP TEXT AND EYES FOR WIDE SCREEN-->
   <% end %>
 </div>
 
