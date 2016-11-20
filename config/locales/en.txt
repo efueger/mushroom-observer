@@ -298,8 +298,11 @@
   user_groups: user groups
   VOTE: Vote
   vote: vote
+  voted: voted
   VOTES: Votes
   votes: votes
+  VOTING: Voting
+  your_votes: Your votes
 
   # Other common nouns.
   ACCOUNT: Account
@@ -1001,7 +1004,7 @@
   app_banner: Mushroom<br/>Observer
 
   # This goes in a box at the top of the page.
-  app_banner_box: At long last the Mushroom Observer website is up to date with the latest stable version of Ruby on Rails (4.2.5).<br/>You should see no new changes in the site due to this latest upgrade, but of course <a href="/observer/ask_webmaster_question">send us a note</a> if you see anything wrong. See <a href="/observer/news">Release Notes</a> for more details.
+  app_banner_box: "\"Letter to the Mushroom Observer Community\":/observer/letter_to_community -- please read."
 
   # These are the controls/links in the left-hand panel.
   app_intro: Introduction
@@ -1141,6 +1144,7 @@
   # naming/create
   create_naming_title: "Propose Name for Observation #[id]"
   create_new_naming_warn: Sorry, someone else has given this a positive vote, so we had to create a new Naming to accomodate your changes."
+  create_naming_vote: "voted \"[value]\" for [name]"
 
   # observer/create_observation
   create_observation_title: "[:create_object(type=:observation)]"
@@ -1716,7 +1720,6 @@
   show_namings_proposed_names: "[:NAMINGS]"
   show_namings_no_names_yet: No names have been proposed yet.
   show_namings_propose_new_name: Propose Another Name
-  show_namings_more: More
   show_namings_eye_help: Observer's choice
   show_namings_eyes_help: Current consensus
   show_namings_community_favorite: This is the community favorite.
@@ -1729,12 +1732,13 @@
   show_namings_consensus_help: For each name listed above select your opinion of how well that name applies to this observation.  Select '[:show_namings_propose_new_name]' if you want to suggest another option.  See the "How to Use":/observer/how_to_use#voting page for more details on how the votes are tallied.
   show_namings_lose_changes: You must click '[:show_namings_update_votes]' to save any changes you've made to your votes.
   show_namings_please_login: Please login to propose your own names and vote on existing names.
+  show_namings_add_name: "[:add_object(type=:name)]"
 
   # observer/show_observation
   show_observation_title: "[:OBSERVATION]: [name]"
   show_observation_header: "[:OBSERVATION]"
-  show_observation_site_id: Site ID
-  show_observation_owner_id: Observer Preference
+  show_observation_site_id: Site Id
+  show_observation_owner_id: Observer Id
   show_observation_no_clear_preference: no clear preference
   show_observation_edit_observation: "[:edit_object(type=:observation)]"
   show_observation_propose_new_name: "[:show_namings_propose_new_name]"

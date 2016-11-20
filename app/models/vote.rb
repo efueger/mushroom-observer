@@ -161,6 +161,11 @@ class Vote < AbstractModel
     [:vote_confidence_0,   -3.0]
   ]
 
+  VALUE_NAMES = {}
+  for symbol, value in CONFIDENCE_VALS
+    VALUE_NAMES[value] = symbol.l
+  end
+
   NO_OPINION_VAL = [:vote_no_opinion, 0]
 
   # Force unit tests to verify existence of these translations.
@@ -202,6 +207,10 @@ class Vote < AbstractModel
   # ----------------------------
 
   LOG10 = Math.log(10)
+
+  def value_name
+    VALUE_NAMES[value]
+  end
 
   # Calculate user weight from contribution score.  Weight is logarithmic:
   #

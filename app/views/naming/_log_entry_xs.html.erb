@@ -1,0 +1,25 @@
+<% Textile.register_name(naming.name) %>
+<div class="list-group-item">
+  <div class="row">
+    <div class="col-xs-12">
+      <%= link_with_query(naming.format_name.t,
+                          controller: :name, action: :show_name,
+                          id: naming.name) %>
+    </div>
+    <div class="col-xs-6">
+	    <% if observation.is_owners_favorite?(naming) %>
+        <%= :show_observation_owner_id.t +
+	          (naming == consensus ? ", " : "") %>
+	    <% end %>
+	    <%= :show_observation_site_id.t if naming == consensus %>
+	  </div>
+	  <div class="col-xs-6">
+	    Proposed by
+      <strong>
+	      <%= user_link(naming.user, naming.user.login) %>
+	    </strong>
+	    on
+	    <%= naming.created_at.strftime("%Y-%m-%d") %>
+    </div>
+  </div>
+</div>

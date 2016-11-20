@@ -19,9 +19,6 @@
 	</p>
     </div>
 
-    <%= render(partial: "naming/show",
-	  locals: { observation: @observation, details: true }) %>
-
     <%= form_tag(add_query_param(action: :create, id: @observation.id,
         approved_name: @params.what)) do %>
       <%= submit_tag(:CREATE.l,

@@ -3,6 +3,7 @@
   consensus = observation.consensus_naming
   any_names = observation.namings && observation.namings.count > 0
   votes = observation.user_votes_by_naming(@user)
+  details = @details
 %>
 
 <!--TABLE OF NAMES FOR WIDE SCREEN-->
@@ -11,102 +12,66 @@
       id: observation.id), id: "cast_votes_1") do %>
 
     <div class="row table-namings">
-      <div class="col-sm-6">
-	<% if any_names %>
-          <%= content_tag(:h4, :show_namings_proposed_names.t) %>
-	<% else %>
-	  <%= content_tag(:h4, :show_namings_no_names_yet.t) %>
-	<% end %>
-      </div>
+      <% if details %>
+        <div class="col-sm-2 push-down">
+          <%= :your_votes.t %>
+        </div>
+        <div class="col-sm-4 push-down">
+          <%= name_header(any_names) %>
+        </div>
+      <% else %>
+        <div class="col-sm-6 push-down">
+          <%= name_header(any_names) %>
+        </div>
+      <% end %>
       <div class="col-sm-2 push-down">
-	<%= :show_namings_date_proposed.t %>
+        <%= :DATE.t %>
       </div>
       <div class="col-sm-2 push-down"><%= :show_namings_user.t %></div>
       <div class="col-sm-2 push-down">
-	Id
-	<% unless details %>
-	  <%= link_with_query(:show_namings_more.t, {
-	      controller: :naming,
-	      action: :create,
-	      id: observation.id},
-	      class: "btn pull-right") %>
-	<% end %>
+        <%= link_with_query(:VOTING.t, {
+            action: :show_observation,
+            details: true,
+            id: observation.id},
+            class: "btn pull-right") unless details %>
       </div>
     </div>
     <div class="list-group">
-      <% observation.namings.sort_by(&:created_at).reverse.each do |naming| %>
-        <% Textile.register_name(naming.name) %>
-        <div class="list-group-item">
-          <div class="row">
-            <% if details && logged_in %>
-              <div class="col-sm-2">
-                <% @vote = votes[naming.id]
-                   menu = Vote.confidence_menu
-                   if can_have_no_opinion(naming, @vote)
-                     menu = [Vote.no_opinion] + menu
-                   end %>
-                <%= select(:vote, :value, menu, {},
-                           { index: naming.id,
-                             data: { role: "change_vote", id: naming.id } }
-                    ) %>
-                <%= submit_tag(:show_namings_cast.l,
-                               class: "btn") if !can_do_ajax? %>
-              <% if details && check_permission(naming) %>
-                [<%= link_with_query(:EDIT.t,
-                     { controller: :naming, action: :edit,
-                     id: naming })
-                 %>&nbsp;|&nbsp;<%= link_with_query(:DESTROY.t,
-                     { controller: :naming, action: :destroy,
-                     id: naming.id },
-                     data: {confirm: :are_you_sure.l }) %>]
-	      <% end %>
-	      </div>
-              <div class="col-sm-4">
-            <% else %>
-              <div class="col-sm-6">
-            <% end %>
-              <%= link_with_query(naming.format_name.t,
-                  controller: :name, action: :show_name,
-                  id: naming.name) %>
-    	    </div>
-            <div class="col-sm-2">
-    	      <%= naming.created_at.strftime("%Y-%m-%d") %>
-    	    </div>
-            <div class="col-sm-2">
-              <strong><%= user_link(naming.user, naming.user.login) %></strong>
-    	    </div>
-            <div class="col-sm-2">
-	      <b>
-    		<% if observation.is_owners_favorite?(naming) %>
-                  <%= :OBSERVER.t +
-    		      (naming == consensus ? ", " : "") %>
-		<% end %>
-                <%= :SITE.t if naming == consensus %>
-              </b>
-    	    </div>
-          </div>
-	</div>
+      <% naming_events(observation, details).each do |event| %>
+        <% if event.is_a?(Naming) %>
+          <%= render(partial: "naming/log_entry",
+                     locals: { naming: event,
+                               vote: votes[event.id],
+                               show_details: details && logged_in,
+                               observation: observation,
+                               consensus: consensus }) %>
+        <% elsif event.is_a?(Vote) %>
+          <%= render(partial: "vote/log_entry",
+                     locals: { vote: event }) %>
+        <% end # if event.is_a?(Naming) %>
       <% end # each_name %>
     </div>
-    <!--/TABLE OF NAMES FOR WIDE SCREEN-->
-
-    <!--HELP TEXT AND EYES FOR WIDE SCREEN-->
-    <% if details %>
-      <div class="row" style="margin: 0; padding-top: 0; padding-bottom: 0">
-        <div class="col-xs-12">
-          <div class="pull-right-sm push-down-sm">
-            <%= submit_tag(:show_namings_update_votes.l,
-                           data: {role: "save_votes"},
-                           class: "btn") if logged_in && any_names %>
-          </div>
-          <p class="help-block max-width-text">
-            <% if !logged_in %>
-                <%= :show_namings_please_login.t %>
-            <% end %>
-          </p>
+    <div class="row" style="margin: 0; padding-top: 0; padding-bottom: 0">
+      <% if details %>
+        <div class="col-sm-3">
+          <%= submit_tag(:show_namings_update_votes.l,
+                         data: {role: "save_votes"},
+                         class: "btn push-up") if logged_in && any_names %>
         </div>
+      <% end %>
+      <div class="col-sm-2">
+        <%= link_with_query(:show_namings_add_name.t, {
+            controller: :naming,
+            action: :create,
+            id: observation.id},
+            class: "btn push-up") %>
       </div>
-    <% end %>
+      <p class="help-block max-width-text">
+        <% if !logged_in %>
+            <%= :show_namings_please_login.t %>
+        <% end %>
+      </p>
+    </div>
     <!--/HELP TEXT AND EYES FOR WIDE SCREEN-->
   <% end %>
 </div>
@@ -115,41 +80,26 @@
 <div class="visible-xs">
   <%= form_tag(add_query_param(controller: :vote, action: :cast_votes,
                id: observation.id), id: "cast_votes_2") do %>
-
     <div class="row visible-xs">
       <div class="col-xs-12">
         <% if any_names %>
           <%= content_tag(:h4, :show_namings_proposed_names.t) %>
           <div class="list-group">
-            <% observation.namings.each do |naming| %>
-              <% Textile.register_name(naming.name) %>
-              <div class="list-group-item">
-                <div class="row">
-                  <div class="col-xs-12">
-                    <%= link_with_query(naming.format_name.t,
-                                        controller: :name, action: :show_name,
-                                        id: naming.name) %>
-                  </div>
-                  <div class="col-xs-6">
-		    <% if observation.is_owners_favorite?(naming) %>
-                      <%= :show_observation_owner_id.t +
-		          (naming == consensus ? ", " : "") %>
-		    <% end %>
-		    <%= :show_observation_site_id.t if naming == consensus %>
-		  </div>
-		  <div class="col-xs-6">
-		    Proposed by
-                    <strong>
-		      <%= user_link(naming.user, naming.user.login) %>
-		    </strong>
-		    on
-		    <%= naming.created_at.strftime("%Y-%m-%d") %>
-                  </div>
-                </div>
-              </div>
+            <% naming_events(observation, details).each do |event| %>
+              <% if event.is_a?(Naming) %>
+                <% render(partial: "naming/log_entry_xs",
+                          locals: { naming: event,
+                                    vote: votes[event.id],
+                                    show_details: details && logged_in,
+                                    observation: observation,
+                                    consensus: consensus }) %>
+              <% elsif event.is_a?(Vote) %>
+                <%= render(partial: "vote/log_entry_xs",
+                           locals: { vote: event }) %>
+              <% end # if event.is_a?(Naming) %>
             <% end # each_name %>
           </div>
-	<% else # any_names %>
+        <% else # any_names %>
           <%= content_tag(:h4, :show_namings_no_names_yet.t) %>
         <% end # any_names %>
       </div>

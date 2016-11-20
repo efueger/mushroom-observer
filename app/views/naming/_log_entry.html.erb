@@ -1,0 +1,52 @@
+<% Textile.register_name(naming.name) %>
+<div class="list-group-item">
+  <div class="row">
+    <% if show_details %>
+      <div class="col-sm-2">
+        <% @vote = vote
+           menu = Vote.confidence_menu
+           if can_have_no_opinion(naming, @vote)
+             menu = [Vote.no_opinion] + menu
+           end %>
+        <%= select(:vote, :value, menu, {},
+                   { index: naming.id,
+                     data: { role: "change_vote", id: naming.id } }
+            ) %>
+        <%= submit_tag(:show_namings_cast.l,
+                       class: "btn") if !can_do_ajax? %>
+        <% if check_permission(naming) %>
+          [<%= link_with_query(:EDIT.t,
+               { controller: :naming, action: :edit,
+               id: naming })
+           %>&nbsp;|&nbsp;<%= link_with_query(:DESTROY.t,
+               { controller: :naming, action: :destroy,
+               id: naming.id },
+               data: {confirm: :are_you_sure.l }) %>]
+        <% end %>
+      </div>
+      <div class="col-sm-4">
+    <% else %>
+      <div class="col-sm-6">
+    <% end %>
+    <%= link_with_query(naming.format_name.t,
+        controller: :name, action: :show_name,
+        id: naming.name) %>
+    </div>
+    <div class="col-sm-2">
+      <%= naming.created_at.strftime("%Y-%m-%d") %>
+    </div>
+    <div class="col-sm-2">
+      Proposed by
+      <strong><%= user_link(naming.user, naming.user.login) %></strong>
+    </div>
+    <div class="col-sm-2">
+      <% if observation.is_owners_favorite?(naming) %>
+        <%= :Observer %>
+        <%= " & " + :SITE.t if naming == consensus %>
+        <%= :ID.t %>
+      <% elsif naming == consensus %>
+        <%= :SITE.t %><%= :ID.t %>
+      <% end %>
+    </div>
+  </div>
+</div>
